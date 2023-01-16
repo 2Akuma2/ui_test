@@ -3,8 +3,6 @@ description: "Executes all ui tests" # needs license & ADITOdesigner.conf in QF-
 runs:
   using: "composite"
   steps:
-   
-####
     
     # download qfs
     - name: download qfs-sfx.exe (win)
