@@ -1,13 +1,5 @@
 name: "Execute UI Tests"
 description: "Executes all ui tests" # needs license & ADITOdesigner.conf in QF-Test folder
-inputs:
-  nexus_user:
-    description: 'Nexus Username'
-    required: true
-  nexus_password:
-    description: 'Nexus Password'
-    required: true
-
 runs:
   using: "composite"
   steps:
