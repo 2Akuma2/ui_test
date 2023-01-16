@@ -94,7 +94,7 @@ runs:
         fullVersion: '1234.5.6.7'
     
     
-    # does max need scaleui? currently empty
+    # does mac need scaleui? where to put license?
     - name: ADITOdesigner.conf (mac) 
       if: runner.os == 'macOS'
       shell: bash
