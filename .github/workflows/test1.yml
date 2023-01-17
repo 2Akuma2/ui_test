@@ -17,7 +17,7 @@ jobs:
         cd .github/workflows
         pwd
         ls
-        cd ../QF-Test/testsuites
+        cd ../../QF-Test/testsuites
         pwd
         ls
       
