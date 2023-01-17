@@ -1,0 +1,28 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: checkout repo
+      uses: actions/checkout@v3
+      
+    - name: check folders
+      shell: bash
+      runs: |
+        pwd
+        ls
+        cd .github/workflows
+        pwd
+        ls
+        cd ../QF-Test/testsuites
+        pwd
+        ls
+      
+    - name: check for files
+      uses: andstor/file-existence-action@v2
+      with: 
+        files: "github/workflows, QF-Test/testsuites"
+        fail: true
