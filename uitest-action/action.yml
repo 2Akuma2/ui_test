@@ -117,13 +117,13 @@ runs:
       if: runner.os == 'Windows'
       working-directory: ./QF-Test
       shell: cmd
-      run: qftest\qftest-6.0.4\bin\qftestc.exe -batch -nomessagewindow -verbose -run qftest\qftest-6.0.4\demo\carconfig\carconfig_de.qft
+      run: qftest\qftest-6.0.4\bin\qftestc.exe -batch -nomessagewindow -verbose -run testsuites\exampleTestSuiteDesigner.qft
     
     - name: UI Tests (lin)
       if: runner.os == 'Linux'
       working-directory: ./QF-Test
       shell: bash
-      run: qftest/qftest-6.0.4/bin/qftest -batch -nomessagewindow -verbose -run qftest/qftest-6.0.4/demo/carconfig/carconfig_de.qft
+      run: qftest/qftest-6.0.4/bin/qftest -batch -nomessagewindow -verbose -run testsuites/exampleTestSuiteDesigner.qft
     
     - name: UI Tests (mac) # run tbd
       if: runner.os == 'macOS'
