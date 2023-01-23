@@ -3,26 +3,50 @@ on:
 
 jobs:
   test_job:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: windows-latest
+          - os: macos-latest
     steps:
     
     - name: checkout repo
       uses: actions/checkout@v3
       
-    - name: check folders
+    - name: checkout quick-download
+      uses: actions/checkout@v3
+      with:
+        repository: 2Akuma2/quick-download
+        path: './quick-download'
+    
+    - name: download qfs-sfx.exe (win)
+      if: runner.os == 'Windows'
+      uses: ./quick-download
+      with:
+        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4-sfx.exe
+        output_path: ./QF-Test
+        output_file: qftest.exe
+    
+    - name: download qfs.tar (lin)
+      if: runner.os == 'Linux'
+      uses: ./quick-download
+      with:
+        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.tar.gz
+        output_path: ./QF-Test
+        output_file: qftest.tar.gz
+    
+    - name: download qfs.dmg (mac)
+      if: runner.os == 'macOS'
+      uses: ./quick-download
+      with:
+        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.dmg
+        output_path: ./QF-Test
+        output_file: qftest.edmg
+
+    - name: check for download
       shell: bash
-      run: |
-        pwd
-        ls
-        cd .github/workflows
-        pwd
-        ls
-        cd ../../QF-Test/testsuites
-        pwd
-        ls
-      
-    - name: check for files
-      uses: andstor/file-existence-action@v2
-      with: 
-        files: ".github/workflows, QF-Test/testsuites"
-        fail: true
+      working-directory: ./QF-Test
+      run: ls 
