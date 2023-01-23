@@ -15,45 +15,22 @@ jobs:
       qfversion: '6.0.4'
     steps:
     
-    - name: checkout repo
-      uses: actions/checkout@v3
-      
-    - name: checkout quick-download
-      uses: actions/checkout@v3
-      with:
-        repository: 2Akuma2/quick-download
-        path: './quick-download'
     
-    - name: download qfs-sfx.exe (win)
+    - name: check github env (win)
       if: runner.os == 'Windows'
-      uses: ./quick-download
-      with:
-        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-${{ env.qfversion }}-sfx.exe
-        output_path: ./QF-Test
-        output_file: qftest-sfx.exe
+      shell: cmd
+      working-directory: ./QF-Test
+      run: echo %GITHUB_WORKSPACE%
     
-    - name: download qfs.tar (lin)
+    - name: check github env (lin)
       if: runner.os == 'Linux'
-      uses: ./quick-download
-      with:
-        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-${{ env.qfversion }}.tar.gz
-        output_path: ./QF-Test
-        output_file: qftest.tar.gz
+      shell: bash
+      working-directory: ./QF-Test
+      run: echo $GITHUB_WORKSPACE
     
-    - name: download qfs.dmg (mac)
+    - name: check github env (mac)
       if: runner.os == 'macOS'
-      uses: ./quick-download
-      with:
-        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-${{ env.qfversion }}.dmg
-        output_path: ./QF-Test
-        output_file: qftest.dmg
-
-    - name: test download
       shell: bash
       working-directory: ./QF-Test
-      run: curl -o qftest2-sfx.exe https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.tar.gz
-      
-    - name: check for download
-      shell: bash
-      working-directory: ./QF-Test
-      run: ls 
+      run: echo $GITHUB_WORKSPACE
+    
