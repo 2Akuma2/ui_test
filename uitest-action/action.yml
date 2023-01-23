@@ -51,11 +51,11 @@ runs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: (Get-Content QF-Test\ADITOdesigner.conf) | % {
-             $_ -replace [regex]::escape('${installer:adito.installer.scaleui}'), '${{ env.scaleuiwin }}' `
-                -replace [regex]::escape('${adito.complete.final.version}'), '${{ env.fullVersion }}' `
+             $_ -replace 'SCALEUI', '${{ env.scaleuiwin }}' `
+                -replace 'FINALVERSION', '${{ env.fullVersion }}' `
                 -replace 'jdkhome="jre"', 'jdkhome="${{ env.JAVA_HOME }}"' `
-                -replace [regex]::escape('${installer:adito.installer.basepath}/lib/designer'), '${{ github.workspace }}/application/designer/target/aditodesigner' `
-                -replace [regex]::escape('${installer:adito.installer.basepath}'), '${{ github.workspace }}' `
+                -replace 'BASEPATH/lib/designer', '${{ github.workspace }}/application/designer/target/aditodesigner' `
+                -replace 'BASEPATH', '${{ github.workspace }}' `
              } | Set-Content QF-Test\ADITOdesigner.conf; `
              Move-Item -Path QF-Test\ADITOdesigner.conf -Destination application\designer\target\aditodesigner\etc -Force; `
              Move-Item -Path QF-Test\license -Destination QF-Test\qftest\qftest-${{ env.qfversion }} -Force
@@ -65,11 +65,11 @@ runs:
       if: runner.os == 'Linux'
       shell: bash
       run:  |
-        sed -i 's/\${installer:adito.installer.scaleui}/${{ env.scaleuilin }}/g' QF-Test/ADITOdesigner.conf
-        sed -i 's/\${adito.complete.final.version}/${{ env.fullVersion }}/g' QF-Test/ADITOdesigner.conf
+        sed -i 's!SCALEUI!${{ env.scaleuilin }}!g' QF-Test/ADITOdesigner.conf
+        sed -i 's!FINALVERSION!${{ env.fullVersion }}!g' QF-Test/ADITOdesigner.conf
         sed -i 's!jdkhome="jre"!jdkhome="${{ env.JAVA_HOME }}"!g' QF-Test/ADITOdesigner.conf
-        sed -i 's!\${installer:adito.installer.basepath}/lib/designer!${{ github.workspace }}/application/designer/target/aditodesigner!g' QF-Test/ADITOdesigner.conf
-        sed -i 's!\${installer:adito.installer.basepath}!${{ github.workspace }}!g' QF-Test/ADITOdesigner.conf
+        sed -i 's!BASEPATH/lib/designer!${{ github.workspace }}/application/designer/target/aditodesigner!g' QF-Test/ADITOdesigner.conf
+        sed -i 's!BASEPATH!${{ github.workspace }}!g' QF-Test/ADITOdesigner.conf
         mv -f QF-Test/ADITOdesigner.conf application/designer/target/aditodesigner/etc
         mv -f QF-Test/license QF-Test/qftest/qftest-${{ env.qfversion }}
     
