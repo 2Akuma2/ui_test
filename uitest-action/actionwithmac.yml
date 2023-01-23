@@ -1,0 +1,130 @@
+name: "Execute UI Tests"
+description: "Executes all ui tests" # needs license & ADITOdesigner.conf in QF-Test folder
+runs:
+  using: "composite"
+  steps:
+    
+    # download qfs
+    - name: download qfs-sfx.exe (win)
+      if: runner.os == 'Windows'
+      working-directory: ./QF-Test
+      shell: pwsh
+      run: Invoke-WebRequest https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4-sfx.exe -OutFile QF-Test-6.0.4-sfx.exe
+    
+    
+    - name: download qfs.tar (lin)
+      if: runner.os == 'Linux'
+      working-directory: ./QF-Test
+      shell: bash
+      run: curl -o qftest.tar.gz "https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.tar.gz"
+    
+    
+    - name: download qfs.dmg (mac)
+      if: runner.os == 'macOS'
+      working-directory: ./QF-Test
+      shell: bash
+      run: curl -o qftest.dmg 'https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.dmg'
+    
+####
+    
+    # install qfs
+    - name: install qfs (win)
+      if: runner.os == 'Windows'
+      working-directory: ./QF-Test
+      shell: cmd
+      run: QF-Test-6.0.4-sfx.exe
+    
+    
+    - name: install qfs (lin)
+      if: runner.os == 'Linux'
+      working-directory: ./QF-Test
+      shell: bash
+      run:  |
+        tar xzvf qftest.tar.gz
+        cd qftest/qftest-6.0.4
+        printf 'y\ny\n1024\ng\n' | ./setup.sh
+    
+    
+    - name: install qfs (mac)
+      if: runner.os == 'macOS'
+      working-directory: ./QF-Test
+      shell: bash
+      run:  |
+        sudo hdiutil attach qftest.dmg
+        sudo cp -R /Volumes/QF-Test\ 6.0.4 ${{ github.workspace }}/QF-Test
+        sudo hdiutil unmount /Volumes/QF-Test\ 6.0.4/
+    
+####    
+    
+    # edit ADITOdesigner.conf & move ADITOdesigner.conf + license to the right directory
+    - name: ADITOdesigner.conf (win)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: (Get-Content QF-Test\ADITOdesigner.conf) | % {
+             $_ -replace [regex]::escape('${installer:adito.installer.scaleui}'), '${{ env.scaleuiwin }}' `
+                -replace [regex]::escape('${adito.complete.final.version}'), '${{ env.fullVersion }}' `
+                -replace 'jdkhome="jre"', 'jdkhome="${{ env.JAVA_HOME }}"' `
+                -replace [regex]::escape('${installer:adito.installer.basepath}/lib/designer'), '${{ github.workspace }}/application/designer/target/aditodesigner' `
+                -replace [regex]::escape('${installer:adito.installer.basepath}'), '${{ github.workspace }}' `
+             } | Set-Content QF-Test\ADITOdesigner.conf; `
+             Move-Item -Path QF-Test\ADITOdesigner.conf -Destination application\designer\target\aditodesigner\etc -Force; `
+             Get-Content -Path application\designer\target\aditodesigner\etc\ADITOdesigner.conf; `
+             Move-Item -Path QF-Test\license -Destination QF-Test\qftest\qftest-6.0.4 -Force
+      env:
+        scaleuiwin: '-J-Dsun.java2d.dpiaware=true'
+        fullVersion: '1234.5.6.7'
+    
+    
+    - name: ADITOdesigner.conf (lin)
+      if: runner.os == 'Linux'
+      shell: bash
+      run:  |
+        sed -i 's/\${installer:adito.installer.scaleui}/${{ env.scaleuilin }}/g' QF-Test/ADITOdesigner.conf
+        sed -i 's/\${adito.complete.final.version}/${{ env.fullVersion }}/g' QF-Test/ADITOdesigner.conf
+        sed -i 's!jdkhome="jre"!jdkhome="${{ env.JAVA_HOME }}"!g' QF-Test/ADITOdesigner.conf
+        sed -i 's!\${installer:adito.installer.basepath}/lib/designer!${{ github.workspace }}/application/designer/target/aditodesigner!g' QF-Test/ADITOdesigner.conf
+        sed -i 's!\${installer:adito.installer.basepath}!${{ github.workspace }}!g' QF-Test/ADITOdesigner.conf
+        mv -f QF-Test/ADITOdesigner.conf application/designer/target/aditodesigner/etc
+        cat application/designer/target/aditodesigner/etc/ADITOdesigner.conf
+        mv -f QF-Test/license QF-Test/qftest/qftest-6.0.4
+      env:
+        scaleuilin: ''
+        fullVersion: '1234.5.6.7'
+    
+    
+    # does mac need scaleui? where to put license?
+    - name: ADITOdesigner.conf (mac) 
+      if: runner.os == 'macOS'
+      shell: bash
+      run:  |
+        sed -i '' 's/\${installer:adito.installer.scaleui}/${{ env.scaleuimac }}/g' QF-Test/ADITOdesigner.conf
+        sed -i '' 's/\${adito.complete.final.version}/${{ env.fullVersion }}/g' QF-Test/ADITOdesigner.conf
+        sed -i '' 's!jdkhome="jre"!jdkhome="${{ env.JAVA_HOME }}"!g' QF-Test/ADITOdesigner.conf
+        sed -i '' 's!\${installer:adito.installer.basepath}/lib/designer!${{ github.workspace }}/application/designer/target/aditodesigner!g' QF-Test/ADITOdesigner.conf
+        sed -i '' 's!\${installer:adito.installer.basepath}!${{ github.workspace }}!g' QF-Test/ADITOdesigner.conf
+        mv -f QF-Test/ADITOdesigner.conf application/designer/target/aditodesigner/etc
+        cat application/designer/target/aditodesigner/etc/ADITOdesigner.conf
+      env:
+        scaleuimac: ''
+        fullVersion: '1234.5.6.7'
+    
+####
+    
+    # execute ui tests
+    - name: UI Tests (win)
+      if: runner.os == 'Windows'
+      working-directory: ./QF-Test
+      shell: cmd
+      run: qftest\qftest-6.0.4\bin\qftestc.exe -batch -nomessagewindow -verbose -run testsuites\exampleTestSuiteDesigner.qft
+    
+    - name: UI Tests (lin)
+      if: runner.os == 'Linux'
+      working-directory: ./QF-Test
+      shell: bash
+      run: qftest/qftest-6.0.4/bin/qftest -batch -nomessagewindow -verbose -run testsuites/exampleTestSuiteDesigner.qft
+    
+    - name: UI Tests (mac) # run tbd
+      if: runner.os == 'macOS'
+      working-directory: ./QF-Test
+      shell: bash
+      run: 
