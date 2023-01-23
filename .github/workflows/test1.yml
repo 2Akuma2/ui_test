@@ -28,7 +28,7 @@ jobs:
       if: runner.os == 'Windows'
       uses: ./quick-download
       with:
-        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-${version}-sfx.exe
+        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-$qfversion-sfx.exe
         output_path: ./QF-Test
         output_file: qftest.exe
     
@@ -36,7 +36,7 @@ jobs:
       if: runner.os == 'Linux'
       uses: ./quick-download
       with:
-        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-${version}.tar.gz
+        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-$qfversion.tar.gz
         output_path: ./QF-Test
         output_file: qftest.tar.gz
     
@@ -44,7 +44,7 @@ jobs:
       if: runner.os == 'macOS'
       uses: ./quick-download
       with:
-        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-${version}.dmg
+        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-$qfversion.dmg
         output_path: ./QF-Test
         output_file: qftest.dmg
 
