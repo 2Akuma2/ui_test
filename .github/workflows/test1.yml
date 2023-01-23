@@ -30,7 +30,7 @@ jobs:
       with:
         source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-$env:qfversion-sfx.exe
         output_path: ./QF-Test
-        output_file: qftest.exe
+        output_file: qftest-sfx.exe
     
     - name: download qfs.tar (lin)
       if: runner.os == 'Linux'
@@ -51,7 +51,7 @@ jobs:
     - name: test download
       shell: bash
       working-directory: ./QF-Test
-      run: curl -o qftest2.tar.gz https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4-sfx.exe
+      run: curl -o qftest2-sfx.exe https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4-sfx.exe
       
     - name: check for download
       shell: bash
