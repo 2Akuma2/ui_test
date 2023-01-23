@@ -16,9 +16,7 @@ runs:
       if: runner.os == 'Linux'
       working-directory: ./QF-Test
       shell: bash
-      run:  |
-        wget "https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.tar.gz"
-        mv QF-Test-6.0.4.tar.gz qftest.tar.gz
+      run: curl -o qftest.tar.gz "https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.tar.gz"
     
     
     - name: download qfs.dmg (mac)
