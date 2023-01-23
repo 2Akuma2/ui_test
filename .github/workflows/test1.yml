@@ -46,6 +46,11 @@ jobs:
         output_path: ./QF-Test
         output_file: qftest.edmg
 
+    - name: test download
+      shell: bash
+      working-directory: ./QF-Test
+      run: curl -o qftest2.file https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4-sfx.exe
+      
     - name: check for download
       shell: bash
       working-directory: ./QF-Test
