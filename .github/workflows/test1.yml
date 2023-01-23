@@ -19,18 +19,15 @@ jobs:
     - name: check github env (win)
       if: runner.os == 'Windows'
       shell: cmd
-      working-directory: ./QF-Test
       run: echo %GITHUB_WORKSPACE%
     
     - name: check github env (lin)
       if: runner.os == 'Linux'
       shell: bash
-      working-directory: ./QF-Test
       run: echo $GITHUB_WORKSPACE
     
     - name: check github env (mac)
       if: runner.os == 'macOS'
       shell: bash
-      working-directory: ./QF-Test
       run: echo $GITHUB_WORKSPACE
     
