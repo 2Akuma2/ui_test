@@ -28,7 +28,7 @@ jobs:
       if: runner.os == 'Windows'
       uses: ./quick-download
       with:
-        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-$qfversion-sfx.exe
+        source_url: https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-$env:qfversion-sfx.exe
         output_path: ./QF-Test
         output_file: qftest.exe
     
