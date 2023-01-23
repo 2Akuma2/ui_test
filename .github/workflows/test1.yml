@@ -51,7 +51,7 @@ jobs:
     - name: test download
       shell: bash
       working-directory: ./QF-Test
-      run: curl -o qftest2-sfx.exe https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4-sfx.exe
+      run: curl -o qftest2-sfx.exe https://www.qfs.de/fileadmin/Webdata/pub/qftest/QF-Test-6.0.4.tar.gz
       
     - name: check for download
       shell: bash
